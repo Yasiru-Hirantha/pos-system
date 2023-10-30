@@ -37,6 +37,8 @@ btnSave.on('click', () => {
     /* 2. Set an event listener to listen readystatechange */
     xhr.addEventListener('readystatechange', ()=> {
         if (xhr.readyState === 4){
+            [txtName, txtAddress, txtContact, btnSave].forEach(elm => elm.removeAttr('disabled'));
+            $("#loader").css('visibility', 'hidden');
             if (xhr.status === 201){
                 customer = JSON.parse(xhr.responseText);
                 tbodyElm.append(`
@@ -84,6 +86,9 @@ btnSave.on('click', () => {
 
     /* 5. Okay, time to send the request */
     xhr.send(JSON.stringify(customer));
+
+    [txtName, txtAddress, txtContact, btnSave].forEach(elm => elm.attr('disabled', 'true'));
+    $("#loader").css('visibility', 'visible');
 
 });
 

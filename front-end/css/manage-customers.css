@@ -24,3 +24,8 @@
 .actions svg:last-child:hover {
     fill: red;
 }
+
+#loader {
+    visibility: hidden;
+    transform: scale(0.8);
+}
