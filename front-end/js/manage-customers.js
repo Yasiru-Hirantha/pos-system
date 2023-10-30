@@ -84,6 +84,8 @@ btnSave.on('click', () => {
     /* 4. Let's set some request headers */
     xhr.setRequestHeader('Content-Type', 'application/json');
 
+    showProgress(xhr);
+
     /* 5. Okay, time to send the request */
     xhr.send(JSON.stringify(customer));
 
@@ -215,7 +217,10 @@ function getCustomers(){
 
     xhr.open('GET', 'http://localhost:8080/pos/customers' + query, true);
 
-    showProgress(xhr);
+    const tfoot = $("#tbl-customers tfoot tr td:first-child");
+    xhr.addEventListener('loadstart', ()=> tfoot.text('Please wait!'));
+    xhr.addEventListener('loadend', ()=> tfoot.text('No customer records are found!'));
+
     xhr.send();
 }
 

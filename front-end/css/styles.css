@@ -70,4 +70,5 @@ main {
     top: 0;
     height: 4px;
     background-color: dodgerblue;
+    z-index: 9999999;
 }
