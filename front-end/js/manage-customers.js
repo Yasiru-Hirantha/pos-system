@@ -215,8 +215,24 @@ function getCustomers(){
 
     xhr.open('GET', 'http://localhost:8080/pos/customers' + query, true);
 
+    showProgress(xhr);
     xhr.send();
 }
 
 getCustomers();
 $("#txt-search").on('input', ()=> getCustomers());
+
+function showProgress(xhr){
+    const progressBar =  $("#progress-bar");
+    xhr.addEventListener('loadstart', ()=> progressBar.width('5%'));
+    xhr.addEventListener('progress', (eventData)=> {
+        const downloadedBytes = eventData.loaded;
+        const totalBytes = eventData.total;
+        const progress = downloadedBytes / totalBytes * 100;
+        progressBar.width(`${progress}%`);
+    });
+    xhr.addEventListener('loadend', ()=> {
+        progressBar.width('100%');
+        setTimeout(()=> progressBar.width('0%'), 500);
+    });
+}
