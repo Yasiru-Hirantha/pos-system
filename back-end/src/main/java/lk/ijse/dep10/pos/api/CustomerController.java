@@ -1,6 +1,5 @@
 package lk.ijse.dep10.pos.api;
 
-import com.fasterxml.jackson.databind.ser.impl.ReadOnlyClassToSerializerMap;
 import lk.ijse.dep10.pos.dto.CustomerDTO;
 import lk.ijse.dep10.pos.dto.ResponseErrorDTO;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -22,9 +21,35 @@ public class CustomerController {
     @Autowired
     private BasicDataSource pool;
 
+    @GetMapping("/{idOrContact}")
+    public ResponseEntity<?> getCustomer(@PathVariable String idOrContact) {
+        try (Connection connection = pool.getConnection()) {
+            PreparedStatement stm = connection.
+                    prepareStatement("SELECT * FROM customer WHERE id=? OR contact=?");
+            stm.setString(1, idOrContact);
+            stm.setString(2, idOrContact);
+            ResultSet rst = stm.executeQuery();
+            if (rst.next()){
+                int id = rst.getInt("id");
+                String name = rst.getString("name");
+                String contact = rst.getString("contact");
+                String address = rst.getString("address");
+                CustomerDTO customer = new CustomerDTO(id, name, address, contact);
+                return new ResponseEntity<>(customer, HttpStatus.OK);
+            }else{
+                ResponseErrorDTO error = new ResponseErrorDTO(404, "No customer record found");
+                return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            ResponseErrorDTO error = new ResponseErrorDTO(500, "Something went wrong, please try again!");
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateCustomer(@PathVariable("id") int customerId,
-                               @RequestBody CustomerDTO customer){
+                                            @RequestBody CustomerDTO customer) {
         try (Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
                     ("UPDATE customer SET name=?, address=?, contact=? WHERE id=?");
@@ -33,9 +58,9 @@ public class CustomerController {
             stm.setString(3, customer.getContact());
             stm.setInt(4, customerId);
             int affectedRows = stm.executeUpdate();
-            if (affectedRows == 1){
+            if (affectedRows == 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }else {
+            } else {
                 ResponseErrorDTO error = new ResponseErrorDTO(404, "Customer ID not found");
                 return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
             }
@@ -53,15 +78,15 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable("id") String customerId){
+    public ResponseEntity<?> deleteCustomer(@PathVariable("id") String customerId) {
         try (Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.
                     prepareStatement("DELETE FROM customer WHERE id=?");
             stm.setString(1, customerId);
             int affectedRows = stm.executeUpdate();
-            if (affectedRows == 1){
+            if (affectedRows == 1) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }else{
+            } else {
                 ResponseErrorDTO response = new ResponseErrorDTO(404, "Customer ID Not Found");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
