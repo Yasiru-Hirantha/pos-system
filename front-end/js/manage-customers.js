@@ -235,4 +235,17 @@ tbodyElm.on('click', ".delete", (eventData)=> {
     jqxhr.fail(()=> {
         showToast('error', 'Failed', "Failed to delete the customer, try again!");
     });
+
+    /*
+    *   const jqxhr = $.ajax(url, {
+    *               method: 'GET',
+    *               contentType: 'application/json',
+    *               data: 'Request Body'
+    *           });
+    *
+    *   jqxhr.done((response, status)=> {});
+    *   jqxhr.fail(()=> {});
+    *   jqxhr.always(()=> {});
+    *
+    * */
 });
