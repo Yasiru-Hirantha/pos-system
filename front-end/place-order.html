@@ -122,8 +122,61 @@
             </form>
         </section>
     </section>
-    <section class="col-12 col-lg-7">
-        Right Side Column
+    <section class="col-12 col-lg-7 p-2">
+        <div class="fw-bold p-2 d-flex justify-content-between">
+            <span>Order Details</span>
+            <span>2023-05-29 13:17</span>
+        </div>
+        <div id="tbl-order-wrapper" class="border">
+            <table id="tbl-order" class="table table-bordered table-hover my-0">
+            <thead class="border table-light">
+                <tr>
+                    <th>Item</th>
+                    <th>Qty.</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold">I001</div>
+                                <div>Logitech Keyboard</div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                            </svg>
+                        </div>
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        1,250.00
+                    </td>
+                    <td>
+                        6,250.00
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <div class="fs-4 justify-content-between d-flex mt-1 p-2">
+            <span>Net Total</span>
+            <span class="fw-bold">LKR 50,000.00</span>
+        </div>
+        <div class="d-flex justify-content-end" >
+            <button class=" btn fw-bold btn-outline-primary fs-5 d-flex align-items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-basket2" viewBox="0 0 16 16">
+                    <path d="M4 10a1 1 0 0 1 2 0v2a1 1 0 0 1-2 0v-2zm3 0a1 1 0 0 1 2 0v2a1 1 0 0 1-2 0v-2zm3 0a1 1 0 1 1 2 0v2a1 1 0 0 1-2 0v-2z"/>
+                    <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-.623l-1.844 6.456a.75.75 0 0 1-.722.544H3.69a.75.75 0 0 1-.722-.544L1.123 8H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6h1.717L5.07 1.243a.5.5 0 0 1 .686-.172zM2.163 8l1.714 6h8.246l1.714-6H2.163z"/>
+                </svg>
+                Place Order
+            </button>
+        </div>
     </section>
 </main>
 </body>
