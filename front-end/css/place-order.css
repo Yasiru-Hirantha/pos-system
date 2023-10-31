@@ -31,7 +31,7 @@ main > section:first-child {
 
 #tbl-order-wrapper {
     height: 75vh;
-    overflow-y: scroll;
+    overflow-y: auto;
     user-select: none;
 }
 
@@ -47,4 +47,17 @@ main > section:first-child {
 
 #tbl-order-wrapper::-webkit-scrollbar-thumb {
     background: dodgerblue;
+}
+
+#tbl-order tbody .delete:hover {
+    color: red;
+}
+
+#btn-clear-customer.disabled {
+    color: gray;
+}
+
+#btn-clear-customer:not(.disabled):hover {
+    color: red;
+    cursor: pointer;
 }
