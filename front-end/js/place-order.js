@@ -7,6 +7,7 @@ const WS_API_BASE_URL = 'ws://localhost:8080/pos';
 const orderDateTimeElm = $("#order-date-time");
 const tbodyElm = $("#tbl-order tbody");
 const txtCustomer = $("#txt-customer");
+const customerNameElm = $("#customer-name");
 let customer = null;
 let socket = null;
 
@@ -25,14 +26,14 @@ txtCustomer.on('blur', ()=> {
 });
 $("#btn-clear-customer").on('click', ()=> {
     customer = null;
-    $("#customer-name").text("Walk-in Customer");
+    customerNameElm.text("Walk-in Customer");
     txtCustomer.val("");
     txtCustomer.removeClass("is-invalid");
     txtCustomer.trigger("focus");
 });
 socket.addEventListener('message', (eventData)=> {
     customer = JSON.parse(eventData.data);
-    $("#customer-name").text(customer.name);
+    customerNameElm.text(customer.name);
 });
 
 /* Functions */
@@ -42,7 +43,6 @@ function setDateTime() {
 }
 
 function findCustomer() {
-    const customerNameElm = $("#customer-name");
     const idOrContact = txtCustomer.val().trim().replace('C', '');
 
     txtCustomer.removeClass("is-invalid");
