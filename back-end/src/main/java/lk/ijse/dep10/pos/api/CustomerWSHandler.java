@@ -11,7 +11,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class CustomerWSHandler extends TextWebSocketHandler {
 
@@ -25,10 +24,10 @@ public class CustomerWSHandler extends TextWebSocketHandler {
         try (Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection
                     .prepareStatement("SELECT * FROM customer WHERE id=? OR contact=?");
-            stm.setString(1, message.getPayload());
-            stm.setString(2, message.getPayload());
+            stm.setString(1, message.getPayload().strip());
+            stm.setString(2, message.getPayload().strip());
             ResultSet resultSet = stm.executeQuery();
-            if (resultSet.next()){
+            if (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
                 String address = resultSet.getString("address");
