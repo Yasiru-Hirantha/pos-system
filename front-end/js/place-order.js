@@ -111,7 +111,12 @@ function findItem() {
         txtCode.addClass("is-invalid");
         txtCode.trigger('select');
     });
-    jqxhr.always(() => txtCode.removeAttr("disabled"));
+    jqxhr.always(() => {
+        txtCode.removeAttr("disabled");
+        if (!item?.qty){
+            txtCode.trigger("select");
+        }
+    });
 }
 
 function formatPrice(price) {
