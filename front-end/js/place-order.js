@@ -9,6 +9,8 @@ const tbodyElm = $("#tbl-order tbody");
 const txtCustomer = $("#txt-customer");
 const customerNameElm = $("#customer-name");
 const txtCode = $("#txt-code");
+const frmOrder = $("#frm-order");
+const txtQty = $("#txt-qty");
 let customer = null;
 let socket = null;
 
@@ -20,28 +22,28 @@ socket = new WebSocket(`${WS_API_BASE_URL}/customers-ws`);
 /* Event Handlers & Timers */
 setInterval(setDateTime, 1000);
 txtCustomer.on('input', () => findCustomer());
-txtCustomer.on('blur', ()=> {
-    if (txtCustomer.val() && !customer){
+txtCustomer.on('blur', () => {
+    if (txtCustomer.val() && !customer) {
         txtCustomer.addClass("is-invalid");
     }
 });
-$("#btn-clear-customer").on('click', ()=> {
+$("#btn-clear-customer").on('click', () => {
     customer = null;
     customerNameElm.text("Walk-in Customer");
     txtCustomer.val("");
     txtCustomer.removeClass("is-invalid");
     txtCustomer.trigger("focus");
 });
-socket.addEventListener('message', (eventData)=> {
+socket.addEventListener('message', (eventData) => {
     customer = JSON.parse(eventData.data);
     customerNameElm.text(customer.name);
 });
-txtCode.on('change', ()=> findItem());
+txtCode.on('change', () => findItem());
 
 /* Functions */
-function findItem(){
+function findItem() {
     const description = $("#description");
-    const stock = $("#stock");
+    const stock = $("#stock span");
     const unitPrice = $("#unit-price");
     const itemInfo = $("#item-info");
     const code = txtCode.val().trim();
@@ -50,24 +52,32 @@ function findItem(){
     stock.text("");
     unitPrice.text("");
     itemInfo.addClass("d-none");
+    frmOrder.addClass("d-none");
     txtCode.removeClass("is-invalid");
 
     if (!code) return;
 
     const jqxhr = $.ajax(`${REST_API_BASE_URL}/items/${code}`);
-    jqxhr.done((item)=> {
+    txtCode.attr('disabled', true);
+    jqxhr.done((item) => {
         description.text(item.description);
-        stock.text(item.qty ? `In Stock: ${item.qty}`: 'Out of Stock');
+        stock.text(item.qty ? `In Stock: ${item.qty}` : 'Out of Stock');
+        !item.qty ? stock.addClass("out-of-stock"): stock.removeClass("out-of-stock");
         unitPrice.text(formatPrice(item.unitPrice));
         itemInfo.removeClass("d-none");
+        if (item.qty) {
+            frmOrder.removeClass("d-none");
+            txtQty.trigger("select");
+        }
     });
-    jqxhr.fail(()=> {
+    jqxhr.fail(() => {
         txtCode.addClass("is-invalid");
         txtCode.trigger('select');
     });
+    jqxhr.always(() => txtCode.removeAttr("disabled"));
 }
 
-function formatPrice(price){
+function formatPrice(price) {
     return new Intl.NumberFormat('en-LK', {
         style: 'currency',
         currency: 'LKR',
