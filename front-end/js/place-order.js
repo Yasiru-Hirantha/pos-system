@@ -1,5 +1,7 @@
 // import {LocalDateTime, DateTimeFormatter} from '@js-joda/core';
 import {DateTimeFormatter, LocalDateTime} from '../node_modules/@js-joda/core/dist/js-joda.esm.js';
+// import {Big} from 'big.js';
+import {Big} from '../node_modules/big.js/big.mjs';
 
 /* Module Level Variables, Constants */
 const REST_API_BASE_URL = 'http://localhost:8080/pos';
@@ -67,10 +69,10 @@ function addItemToCart() {
                         ${item.qty}
                     </td>
                     <td>
-                        ${item.unitPrice}
+                        ${formatNumber(item.unitPrice)}
                     </td>
                     <td>
-                        ${item.qty * item.unitPrice}
+                        ${formatNumber(Big(item.unitPrice).times(Big(item.qty)))}
                     </td>
                 </tr>`);
     tbodyElm.append(trElm);
@@ -126,6 +128,14 @@ function formatPrice(price) {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     }).format(price);
+}
+
+function formatNumber(number) {
+    return new Intl.NumberFormat('en-LK', {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(number);
 }
 
 function setDateTime() {
