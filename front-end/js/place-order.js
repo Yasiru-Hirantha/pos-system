@@ -2,6 +2,7 @@
 import {DateTimeFormatter, LocalDateTime} from '../node_modules/@js-joda/core/dist/js-joda.esm.js';
 // import {Big} from 'big.js';
 import {Big} from '../node_modules/big.js/big.mjs';
+import {Order} from "./order.js";
 
 /* Module Level Variables, Constants */
 const REST_API_BASE_URL = 'http://localhost:8080/pos';
@@ -16,6 +17,7 @@ const txtQty = $("#txt-qty");
 let customer = null;
 let item = null;
 let socket = null;
+let order = new Order();
 
 /* Initialization Logic */
 setDateTime();
@@ -39,10 +41,11 @@ $("#btn-clear-customer").on('click', () => {
 });
 socket.addEventListener('message', (eventData) => {
     customer = JSON.parse(eventData.data);
+    order.setCustomer(customer);
     customerNameElm.text(customer.name);
 });
 txtCode.on('change', () => findItem());
-frmOrder.on('submit', (eventData)=> {
+frmOrder.on('submit', (eventData) => {
     eventData.preventDefault();
     addItemToCart();
 });
@@ -101,7 +104,7 @@ function findItem() {
         item = data;
         description.text(item.description);
         stock.text(item.qty ? `In Stock: ${item.qty}` : 'Out of Stock');
-        !item.qty ? stock.addClass("out-of-stock"): stock.removeClass("out-of-stock");
+        !item.qty ? stock.addClass("out-of-stock") : stock.removeClass("out-of-stock");
         unitPrice.text(formatPrice(item.unitPrice));
         itemInfo.removeClass("d-none");
         if (item.qty) {
@@ -115,7 +118,7 @@ function findItem() {
     });
     jqxhr.always(() => {
         txtCode.removeAttr("disabled");
-        if (!item?.qty){
+        if (!item?.qty) {
             txtCode.trigger("select");
         }
     });
@@ -150,6 +153,7 @@ function findCustomer() {
     if (!idOrContact) return;
     customer = null;
     customerNameElm.text("Walk-in Customer");
+    order.setCustomer(null);
 
     if (socket.readyState === socket.OPEN) socket.send(idOrContact);
 }
