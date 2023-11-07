@@ -23,6 +23,7 @@ let order = new Order();
 setDateTime();
 tbodyElm.empty();
 socket = new WebSocket(`${WS_API_BASE_URL}/customers-ws`);
+updateOrderDetails();
 
 /* Event Handlers & Timers */
 setInterval(setDateTime, 1000);
@@ -34,6 +35,7 @@ txtCustomer.on('blur', () => {
 });
 $("#btn-clear-customer").on('click', () => {
     customer = null;
+    order.setCustomer(customer);
     customerNameElm.text("Walk-in Customer");
     txtCustomer.val("");
     txtCustomer.removeClass("is-invalid");
@@ -47,12 +49,19 @@ socket.addEventListener('message', (eventData) => {
 txtCode.on('change', () => findItem());
 frmOrder.on('submit', (eventData) => {
     eventData.preventDefault();
-    addItemToCart();
+    addItemToCart(item);
+    order.addItem(item);
 });
 
 /* Functions */
 
-function addItemToCart() {
+function updateOrderDetails() {
+    txtCustomer.val(('C' + order.customer?.id.toString().padStart(3, '0')) ?? '');
+    customerNameElm.text(order.customer?.name);
+    order.itemList.forEach(item => addItemToCart(item));
+}
+
+function addItemToCart(item) {
     const trElm = $(`<tr>
                     <td>
                         <div class="d-flex justify-content-between align-items-center">
