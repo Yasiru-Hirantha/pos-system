@@ -9,6 +9,7 @@ const REST_API_BASE_URL = 'http://localhost:8080/pos';
 const WS_API_BASE_URL = 'ws://localhost:8080/pos';
 const orderDateTimeElm = $("#order-date-time");
 const tbodyElm = $("#tbl-order tbody");
+const tFootElm = $("#tbl-order tfoot");
 const txtCustomer = $("#txt-customer");
 const customerNameElm = $("#customer-name");
 const txtCode = $("#txt-code");
@@ -52,21 +53,32 @@ frmOrder.on('submit', (eventData) => {
     addItemToCart(item);
     order.addItem(item);
 });
+tbodyElm.on('click', 'svg.delete', (eventData)=> {
+    const trElm = $(eventData.target).parents("tr");
+    const code = trElm.find("td:first-child .code").text();
+    order.deleteItem(code);
+    trElm.remove();
+    if (!order.itemList.length){
+        tFootElm.show();
+    }
+});
 
 /* Functions */
 
 function updateOrderDetails() {
-    txtCustomer.val(('C' + order.customer?.id.toString().padStart(3, '0')) ?? '');
+    const id = order.customer?.id.toString().padStart(3, '0');
+    txtCustomer.val(id ? 'C' + id : '');
     customerNameElm.text(order.customer?.name);
     order.itemList.forEach(item => addItemToCart(item));
 }
 
 function addItemToCart(item) {
+    tFootElm.hide();
     const trElm = $(`<tr>
                     <td>
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="fw-bold">${item.code}</div>
+                                <div class="fw-bold code">${item.code}</div>
                                 <div>${item.description}</div>
                             </div>
                             <svg data-bs-toggle="tooltip" data-bs-title="Remove Item" xmlns="http://www.w3.org/2000/svg"
