@@ -24,6 +24,12 @@ export class Order {
         this.#updateOrder();
     }
 
+    updateItemQty(code, qty){
+        if (!this.containItem(code)) return;
+        this.getItem(code).qty = qty;
+        this.#updateOrder();
+    }
+
     deleteItem(code){
         const index = this.itemList.indexOf(this.getItem(code));
         this.itemList.splice(index, 1);
@@ -32,6 +38,10 @@ export class Order {
 
     getItem(code){
         return this.itemList.find(item => item.code === code);
+    }
+
+    containItem(code){
+        return !!this.getItem(code);
     }
 
     getTotal(){

@@ -48,10 +48,31 @@ socket.addEventListener('message', (eventData) => {
     customerNameElm.text(customer.name);
 });
 txtCode.on('change', () => findItem());
+txtQty.on('input', ()=> txtQty.removeClass('is-invalid'));
 frmOrder.on('submit', (eventData) => {
     eventData.preventDefault();
-    addItemToCart(item);
-    order.addItem(item);
+    if (+txtQty.val() <=0 || +txtQty.val() > item.qty) {
+        txtQty.addClass("is-invalid");
+        txtQty.trigger("select");
+        return;
+    }
+    item.qty = +txtQty.val();
+    if (order.containItem(item.code)){
+        order.updateItemQty(item.code, order.getItem(item.code).qty + item.qty);
+        const codeElm = Array.from(tbodyElm.find("tr td:first-child .code")).find(codeElm => $(codeElm).text() === item.code);
+        const qtyElm = $(codeElm).parents("tr").find("td:nth-child(2)");
+        const priceElm = $(codeElm).parents("tr").find("td:nth-child(4)");
+        qtyElm.text(order.getItem(item.code).qty);
+        priceElm.text(formatNumber(Big(order.getItem(item.code).qty).times(item.unitPrice)));
+    }else{
+        addItemToCart(item);
+        order.addItem(item);
+    }
+    $("#item-info").addClass("d-none");
+    frmOrder.addClass("d-none");
+    txtCode.val("");
+    txtCode.trigger("focus");
+    txtQty.val("1");
 });
 tbodyElm.on('click', 'svg.delete', (eventData)=> {
     const trElm = $(eventData.target).parents("tr");
@@ -124,6 +145,9 @@ function findItem() {
     jqxhr.done((data) => {
         item = data;
         description.text(item.description);
+        if (order.containItem(item.code)){
+            item.qty -=order.getItem(code).qty;
+        }
         stock.text(item.qty ? `In Stock: ${item.qty}` : 'Out of Stock');
         !item.qty ? stock.addClass("out-of-stock") : stock.removeClass("out-of-stock");
         unitPrice.text(formatPrice(item.unitPrice));
