@@ -47,6 +47,10 @@ socket.addEventListener('message', (eventData) => {
     order.setCustomer(customer);
     customerNameElm.text(customer.name);
 });
+txtCode.on('input', ()=> {
+    $("#item-info").addClass('d-none');
+    frmOrder.addClass('d-none');
+})
 txtCode.on('change', () => findItem());
 txtQty.on('input', ()=> txtQty.removeClass('is-invalid'));
 frmOrder.on('submit', (eventData) => {
@@ -136,6 +140,7 @@ function findItem() {
     itemInfo.addClass("d-none");
     frmOrder.addClass("d-none");
     txtCode.removeClass("is-invalid");
+    txtQty.val("1");
     item = null;
 
     if (!code) return;
