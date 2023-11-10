@@ -1,7 +1,7 @@
 // import {Big} from 'big.js';
 import {Big} from '../node_modules/big.js/big.mjs';
 
-export class Order {
+export class Cart {
     customer = null;
     itemList = [];
 
