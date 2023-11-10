@@ -68,3 +68,7 @@ main > section:first-child {
     padding: 5px;
     border-radius: 8px;
 }
+
+#frm-order button {
+    min-width: 130px;
+}
