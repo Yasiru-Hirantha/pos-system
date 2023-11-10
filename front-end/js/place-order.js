@@ -89,8 +89,11 @@ tbodyElm.on('click', 'svg.delete', (eventData) => {
     const code = trElm.find("td:first-child .code").text();
     cart.deleteItem(code);
     trElm.remove();
+    txtCode.val("");
+    txtCode.trigger('input');
     if (!cart.itemList.length) {
         tFootElm.show();
+        txtCode.trigger('focus');
     }
 });
 
