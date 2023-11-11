@@ -9,6 +9,7 @@ const WS_API_BASE_URL = 'ws://localhost:8080/pos';
 const orderDateTimeElm = $("#order-date-time");
 const tbodyElm = $("#tbl-order tbody");
 const tFootElm = $("#tbl-order tfoot");
+const netTotalElm = $("#net-total");
 const itemInfoElm = $("#item-info");
 const customerNameElm = $("#customer-name");
 const frmOrder = $("#frm-order");
@@ -18,7 +19,7 @@ const txtQty = $("#txt-qty");
 let customer = null;
 let item = null;
 let socket = null;
-let cart = new Cart();
+let cart = new Cart((total)=> netTotalElm.text(formatPrice(total)));
 
 /* Initialization Logic */
 
@@ -104,6 +105,7 @@ function updateOrderDetails() {
     txtCustomer.val(id ? 'C' + id : '');
     customerNameElm.text(cart.customer?.name);
     cart.itemList.forEach(item => addItemToTable(item));
+    netTotalElm.text(formatPrice(cart.getTotal()));
 }
 
 function addItemToTable(item) {
