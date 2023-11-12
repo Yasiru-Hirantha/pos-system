@@ -16,6 +16,13 @@ export class Cart {
         this.#updateOrder();
     }
 
+    clear(){
+        this.customer = null;
+        this.itemList = [];
+        this.#updateOrder();
+        this.subscriber(this.getTotal());
+    }
+
     setCustomer(customer){
         this.customer = customer;
         this.#updateOrder();
