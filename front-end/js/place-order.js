@@ -120,7 +120,7 @@ function placeOrder(){
     showProgress(xhr);
 
     jqxhr.done((orderId)=> {
-        // Todo: Print the order
+        printBill(orderId);
         cart.clear();
         $("#btn-clear-customer").trigger('click');
         txtCode.val("");
