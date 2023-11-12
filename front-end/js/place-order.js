@@ -126,6 +126,7 @@ function placeOrder(){
         txtCode.val("");
         txtCode.trigger("input");
         tbodyElm.empty();
+        tFootElm.show();
         showToast('success', 'Success', 'Order has been placed successfully');
     });
     jqxhr.fail(()=> {
