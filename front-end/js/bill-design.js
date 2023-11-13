@@ -1,4 +1,8 @@
-<!doctype html>
+import {Big} from '../node_modules/big.js/big.mjs';
+import {formatNumber, formatPrice} from "./place-order.js";
+
+export function getBillDesignHTML(cart, orderId) {
+    return `<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,9 +25,9 @@
         <small>dep10@ijse.lk</small>
     </div>
     <div id="bill-details" class="p-2 border-bottom text-center">
-        <div><span class="fw-bold">Order ID:</span> OD001</div>
-        <div><span class="fw-bold">Customer:</span> C050 - Kasun</div>
-        <div><span class="fw-bold">Order Date:</span> 2023-05-31 15:22:25</div>
+        <div><span class="fw-bold">Order ID:</span> OD${orderId.toString().padStart(3, '0')}</div>
+        <div><span class="fw-bold">Customer:</span> ${cart.customer ? 'C' + cart.customer.id.toString().padStart(3, '0') + " - " + cart.customer.name : 'Walk-in Customer'}</div>
+        <div><span class="fw-bold">Order Date:</span> ${cart.dateTime}</div>
     </div>
     <div id="bill-items">
         <table>
@@ -37,33 +41,12 @@
                 </tr>
             </thead>
             <tbody>
-            <tr>
-               <td>1</td>
-               <td colspan="4">444444444 : Atlas Black Pen</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td>5</td>
-                <td>530.00</td>
-                <td>2,500.00</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td colspan="4">45456456456456 : Atlas Black Pen</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td>5</td>
-                <td>530.00</td>
-                <td>2,500.00</td>
-            </tr>
+            ${generateRows(cart)}
             </tbody>
         </table>
         <h6 class="d-flex justify-content-between p-2 border-bottom">
             <span>Net Total</span>
-            <span>LKR 17,250.00</span>
+            <span>${formatPrice(cart.getTotal())}</span>
         </h6>
     </div>
     <div id="bill-footer" class="text-center">
@@ -80,4 +63,24 @@
     </div>
 </div>
 </body>
-</html>
+</html>`;
+}
+
+function generateRows(cart){
+    let html = '';
+    cart.itemList.forEach((item, index) => {
+        html += `
+            <tr>
+               <td>${index + 1}</td>
+               <td colspan="4">${item.code} : ${item.description}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>${item.qty}</td>
+                <td>${formatNumber(item.unitPrice)}</td>
+                <td>${formatNumber(Big(item.qty).times(Big(item.unitPrice)))}</td>
+            </tr>`;
+    });
+    return html;
+}
